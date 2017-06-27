@@ -12,10 +12,17 @@ module MiniTest::Metadata
       class << self
         # @private
         alias :old_it :it
+        alias :old_test :test
 
         # @private
         def it(description = "", *metadata, &block)
           name = old_it(description, &block)
+          self.metadata[name] = _compute_metadata(metadata) unless metadata.empty?
+          name
+        end
+
+        def test(description = "", *metadata, &block)
+          name = old_test(description, &block)
           self.metadata[name] = _compute_metadata(metadata) unless metadata.empty?
           name
         end
